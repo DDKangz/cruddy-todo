@@ -7,10 +7,16 @@ var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-exports.create = (text, callback) => {
-  var id = counter.getNextUniqueId();
-  items[id] = text;
-  callback(null, { id, text });
+exports.create = (text, callback) => { //id = fileName, text = fileData
+  counter.getNextUniqueId((err, id) => {
+    fs.writeFile(path.join(exports.dataDir + '/' + id + '.txt'), text, (err) => {
+      if (err) {
+        throw ('error writing counter');
+      } else {
+        callback(null, { id, text });
+      }
+    });
+  });
 };
 
 exports.readAll = (callback) => {
