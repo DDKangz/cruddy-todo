@@ -7,7 +7,7 @@ var items = {};
 
 // Public API - Fix these CRUD functions ///////////////////////////////////////
 
-exports.create = (text, callback) => { //id = fileName, text = fileData
+exports.create = (text, callback) => {
   counter.getNextUniqueId((err, id) => {
     fs.writeFile(path.join(exports.dataDir + '/' + id + '.txt'), text, (err) => {
       if (err) {
@@ -20,19 +20,24 @@ exports.create = (text, callback) => { //id = fileName, text = fileData
 };
 
 exports.readAll = (callback) => {
-  var data = _.map(items, (text, id) => {
-    return { id, text };
+  var resultArray = [];
+  fs.readdir(exports.dataDir, (err, files) => {
+    _.map(files, (file) => {
+      var id = file.slice(0, 5);
+      var text = file.slice(0, 5);
+      resultArray.push({id, text});
+    })
+    callback(null, resultArray);
   });
-  callback(null, data);
 };
 
 exports.readOne = (id, callback) => {
-  var text = items[id];
-  if (!text) {
-    callback(new Error(`No item with id: ${id}`));
-  } else {
-    callback(null, { id, text });
-  }
+  // var text = items[id];
+  // if (!text) {
+  //   callback(new Error(`No item with id: ${id}`));
+  // } else {
+  //   callback(null, { id, text });
+  // }
 };
 
 exports.update = (id, text, callback) => {
