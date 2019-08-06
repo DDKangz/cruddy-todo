@@ -26,7 +26,7 @@ exports.readAll = (callback) => {
       var id = file.slice(0, 5);
       var text = file.slice(0, 5);
       resultArray.push({id, text});
-    })
+    });
     callback(null, resultArray);
   });
 };
@@ -37,7 +37,7 @@ exports.readOne = (id, callback) => {
       callback(new Error (`No item with id: ${id}`));
     } else {
       callback (null, { id, text });
-    };
+    }
   });
 };
 
@@ -58,17 +58,11 @@ exports.update = (id, text, callback) => {
 };
 
 exports.delete = (id, callback) => {
-  fs.readFile(path.join(exports.dataDir + '/' + id + '.txt'), 'utf8', (err, data) => {
+  fs.unlink(path.join(exports.dataDir + '/' + id + '.txt'), err => {
     if (err) {
-      callback(new Error(`No item with id: ${id}`));
+      callback(new Error('unable to delete file'));
     } else {
-      fs.unlink(path.join(exports.dataDir + '/' + id + '.txt'), err => {
-        if (err) {
-          callback(new Error('unable to delete file'));
-        } else {
-          callback(console.log('success'));
-        }
-      });
+      callback(console.log('success'));
     }
   });
 };
